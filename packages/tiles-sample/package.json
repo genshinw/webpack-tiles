@@ -1,0 +1,13 @@
+{
+  "name": "tiles-test",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "sourcewang <sourcewang@tencent.com>",
+  "homepage": "",
+  "license": "MIT",
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1",
+    "build": "webpack --config ./config/webpack.config.js",
+    "init": "node ./node_modules/tiles-cli/lib/tiles-cli.js"
+  }
+}

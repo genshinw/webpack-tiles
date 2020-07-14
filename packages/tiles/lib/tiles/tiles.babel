@@ -1,0 +1,42 @@
+const path = require('path');
+const env = require('./env');
+
+module.exports = ({
+  include = [],
+  exclude = [],
+  configFile = './babel.config.js', // can use absolute path
+  loaderChange = null,
+} = {}) => {
+  let babelLoaders = [
+    {
+      loader: 'cache-loader',
+      options: {
+        cacheDirectory: env.CACHE_DIR,
+      },
+    },
+    'thread-loader', // thread-loader cannot write file, so must after cache-loader
+    {
+      loader: 'babel-loader',
+      options: {
+        babelrc: false, // 目前禁止子目录自己的.babrlrc
+        cacheDirectory: false, // babel不用缓存了，整体cache-loader缓存即可
+        configFile: path.resolve(env.DIR_ROOT, configFile),
+      },
+    },
+  ];
+  if (loaderChange) {
+    babelLoaders = loaderChange(babelLoaders);
+  }
+  return {
+    module: {
+      rules: [
+        {
+          test: /\.js$|jsx/,
+          include: include.map((p) => (path.isAbsolute(p) ? p : path.join(env.DIR_ROOT, p))),
+          // exclude: exclude.length > 0 ? exclude.map((p) => (path.isAbsolute(p) ? p : path.join(env.DIR_ROOT, p))) : null,
+          use: babelLoaders,
+        },
+      ],
+    },
+  };
+};

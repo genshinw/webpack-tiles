@@ -1,0 +1,21 @@
+{
+  "name": "webpack-tiles-cli",
+  "version": "1.0.0",
+  "description": "webpack-tiles-cli to help generate webpack config",
+  "author": "sourcewang <sourcewang@tencent.com>",
+  "homepage": "",
+  "license": "MIT",
+  "main": "lib/bin/tiles-cli.js",
+  "files": [
+    "lib",
+    "bin"
+  ],
+  "bin": {
+    "webapck-tiles": "bin/tiles-cli.js"
+  },
+  "dependencies": {
+    "handlebars": "^4.7.6",
+    "inquirer": "^7.3.1",
+    "webpack-tiles": "^0.0.1"
+  }
+}

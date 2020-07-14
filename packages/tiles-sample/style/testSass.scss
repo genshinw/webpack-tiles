@@ -1,0 +1,15 @@
+@import "./base.css";
+@import "./feature/foo.scss";
+$bodyColor: #a6a38f;
+body {
+  background: $bodyColor;
+}
+
+#a {
+  height: 100%;
+
+  div{
+    background: black;
+    width: 100%;
+  }
+}
