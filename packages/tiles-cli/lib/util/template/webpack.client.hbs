@@ -1,0 +1,40 @@
+const { merge } = require('webpack-merge');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { tiles, env } = require('./tiles');
+
+module.exports = () => {
+  const IS_PROD = env.modeIs('prod'); // every tiles can use this function to get the env mode
+  return merge(
+    {
+      mode: IS_PROD ? 'production' : 'development',
+      devtool: IS_PROD ? false : 'inline-cheap-module-source-map', // inline-cheap-module to get fast recompile
+      entry: {
+        main: './src/main.js', // TODO change and add your entries
+      },
+      stats: { children: false },
+      plugins: [new CleanWebpackPlugin()],
+      // if you has only entry, this will help you extract all node_modules to vendor, otherwise you can remove it
+      optimization: {
+        runtimeChunk: { name: 'vendor' },
+        splitChunks: {
+          cacheGroups: {
+            default: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendor',
+              chunks: 'all',
+              reuseExistingChunk: true,
+            },
+          },
+        },
+      },
+    },
+    tiles.progressBar(),
+    // use tiles output config, and change env path(OUTPUT_PATH|PUBLIC_PATH) for tiles
+    tiles.output({
+      publicPath: IS_PROD ? '//cdn.imtt.qq.com/assets/' : './', // TODO set you cdn path
+    })
+    {{#each tiles}}
+    {{{this}}},
+    {{/each}}
+  );
+};

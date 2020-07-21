@@ -1,0 +1,39 @@
+const { merge } = require('webpack-merge');
+const nodeExternals = require('webpack-node-externals');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { tiles, env } = require('./tiles');
+
+module.exports = () => {
+  const IS_PROD = env.modeIs('prod'); // every tiles can use this function to get the env mode
+  return merge(
+    {
+      mode: IS_PROD ? 'production' : 'development',
+      devtool: IS_PROD ? false : 'cheap-module-source-map',
+      target: 'node',
+      entry: { server: './src/server' },
+      optimization: {
+        minimize: false,
+      },
+      stats: { children: false },
+      node: {
+        __dirname: false,
+      },
+      externals: [
+        nodeExternals({
+          whitelist: [/\.(scss|sass|css)$/], // must be deal in server,if node_modules has sass file
+        })
+      ],
+      plugins: [
+        new CleanWebpackPlugin(),
+      ]
+    },
+    // use tiles output config, and change env path(OUTPUT_PATH|PUBLIC_PATH) for tiles
+    tiles.output({
+        filename: '[name].node.js',
+        libraryTarget: 'commonjs2',
+    }),
+    {{#each tiles}}
+    {{{this}}},
+    {{/each}}
+  );
+};

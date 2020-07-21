@@ -20,7 +20,7 @@ module.exports = ({
       options: {
         babelrc: false, // 目前禁止子目录自己的.babrlrc
         cacheDirectory: false, // babel不用缓存了，整体cache-loader缓存即可
-        configFile: path.resolve(env.DIR_ROOT, configFile),
+        configFile: path.resolve(__dirname, configFile),
       },
     },
   ];

@@ -1,0 +1,11 @@
+const { env } = require('./config/tiles');
+
+module.exports = (wpEnv = {}) => {
+  env.init(wpEnv);
+  const fileName = `./config/webpack.${env.target}.js`;
+  const file = require(fileName);
+  const config = typeof file === 'function' ? file(env) : file;
+  console.log(`Start webpack with ${fileName} & with mode: ${env.mode} & target: ${env.target}\n`);
+  // console.log(config);
+  return config;
+};

@@ -1,0 +1,15 @@
+const path = require('path');
+const merge = require('webpack-merge');
+const env = require('./env');
+
+module.exports = {
+  tiles: {
+    output: require('./tiles.output'),
+    {{#each tiles}}
+    {{{this}}}: require('./tiles.{{{this}}}'),
+    {{/each}}
+    progressBar: require('./tiles.progressBar'),
+  },
+  merge,
+  env,
+};

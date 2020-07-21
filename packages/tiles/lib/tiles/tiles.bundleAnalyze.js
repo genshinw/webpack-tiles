@@ -1,9 +1,10 @@
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const env = require('./env');
+
 module.exports = (opt = {}) =>
   env.isAnalyze
     ? {
-        devtools: false, // can run faster
+        devtool: false, // can run faster
         plugins: [
           new BundleAnalyzerPlugin({
             port: 8003,

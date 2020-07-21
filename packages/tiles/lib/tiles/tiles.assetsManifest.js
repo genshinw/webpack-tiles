@@ -16,11 +16,11 @@ module.exports = ({
       js:
         value
           .filter((file) => file.endsWith('.js'))
-          .map((file) => `${env.get('PUBLIC_PATH')}${file}?max_age=${MAX_AGE}`)[0] || '',
+          .map((file) => `${env.get('PUBLIC_PATH')}${file}?max_age=${MAX_AGE}`) || [],
       css:
         value
           .filter((file) => file.endsWith('.css'))
-          .map((file) => `${env.get('PUBLIC_PATH')}${file}?max_age=${MAX_AGE}`)[0] || '',
+          .map((file) => `${env.get('PUBLIC_PATH')}${file}?max_age=${MAX_AGE}`) || '',
     }));
     const mergeJSON = mergeManifestPath ? require(mergeManifestPath) : {};
     return Object.assign(manifest, mergeJSON);
@@ -29,14 +29,14 @@ module.exports = ({
     plugins: [
       new WebpackManifestPlugin({
         fileName,
-        writeToFileEmit: env.test('isWsd'), // WDS环境，文件都在内存中，这个是强制输出
+        writeToFileEmit: env.isWds, // WDS环境，文件都在内存中，这个是强制输出
         generate,
         serialize: isGenerateXML
           ? (manifest) =>
               builder.buildObject({
                 config: manifest,
               })
-          : null, // 默认会JSON.toString
+          : (manifest) => JSON.stringify(manifest, null, 2), // 默认会JSON.toString
       }),
     ].filter((p) => !!p),
   };

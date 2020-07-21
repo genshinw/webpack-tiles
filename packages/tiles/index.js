@@ -14,17 +14,20 @@ const tilesMeta = {
     dependency: [],
   },
   css: {
-    path: 'tiles.cssResolve',
+    path: 'tiles.css',
     dependency: [
       'cache-loader',
-      'node-sass',
-      'sass-loader',
       'css-loader',
+      'ignore-loader',
       'extract-css-chunks-webpack-plugin',
       'optimize-css-assets-webpack-plugin',
-      'postcss-loader',
-      'resolve-url-loader',
     ],
+    sassDependency: [
+      'node-sass',
+      'sass-loader',
+      'resolve-url-loader', // handle @import sass url
+    ],
+    postcssDependency: ['postcss-loader'],
   },
   additionalRes: {
     path: '.tiles.additionalRes',
@@ -41,8 +44,8 @@ const tilesMeta = {
     ],
   },
   assetsManifest: {
-    path: 'tiles.assets',
-    dependency: ['webpack-manifest-plugin'],
+    path: 'tiles.assetsManifest',
+    dependency: ['webpack-manifest-plugin', 'xml2js'],
   },
   devServer: {
     path: 'tiles.devServer',
@@ -54,8 +57,11 @@ const tilesMeta = {
   },
 };
 (function _setTiles(tileMetas) {
+  const dep = [];
   Object.keys(tileMetas).forEach((tileKey) => {
     const tile = tilesMeta[tileKey];
+    dep.push(...tile.dependency);
+
     Object.defineProperty(tiles, tileKey, {
       get: () => {
         if (tile.dependency) {
